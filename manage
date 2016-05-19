@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+if [ -z "$*" ]; then
+	cat >&2 <<END
+Commands:
+
+install               - install packages from requirements.txt (creates virtualenv on first invocation)
+virtualenv            - open shell inside virtualenv
+virtualenv <command>  - run <command> inside virtualenv (e.g. $0 virtualenv pip install foo)
+
+Anything else is passed to Django manage.py, e.g.:
+
+migrate               - apply Django migrations
+runserver 8888        - run development server
+END
+	exit 1
+fi
+
+set -e
+
+cd $(dirname $(cd ${0%/*} && echo $PWD/${0##*/}))  # cd to own directory
+
+DJANGO_SCRIPT=${DJANGO_SCRIPT:-src/manage.py}
+python=$($(cat "$DJANGO_SCRIPT" | head -n 1 | tail -c +3) -c 'import sys; print(sys.executable)')
+
+VENV_BIN="virtualenv --python=$python"
+VENV_PATH=${VENV_PATH:-var/venv}
+
+die() { echo $@ 1>&2 ; exit 1; }
+
+[ -d "$VENV_PATH" ] || mkdir -p "$VENV_PATH" || die "Failed to create virtualenv directory at $VENV_PATH"
+[ -f "$VENV_PATH/bin/python" ] || $VENV_BIN "$VENV_PATH" || die "Failed to initialize virtualenv at $VENV_PATH"
+. "$VENV_PATH/bin/activate" || die "Failed to activate virtualenv at $VENV_PATH"
+
+case "$1" in
+install)
+	pip install -r requirements.txt
+	;;
+virtualenv)
+	shift
+	if [ -z "$*" ]; then
+		"$SHELL"
+	else
+		"$@"
+	fi
+	;;
+*)
+	"$DJANGO_SCRIPT" "$@"
+	;;
+esac
