@@ -13,6 +13,15 @@ class Player(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_place1_number(self):
+		return self.leave_set.filter(place=1).count()
+
+	def get_place2_number(self):
+		return self.leave_set.filter(place=2).count()
+
+	def get_place3_number(self):
+		return self.leave_set.filter(place=3).count()
+
 
 class Match(models.Model):
 	players = models.ManyToManyField(Player, verbose_name='Игроки')

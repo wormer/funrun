@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.paginator import InvalidPage, EmptyPage, Paginator
 from django.utils import timezone
 
-from .models import Match
+from .models import Match, Player
 
 
 def paginate_list(request, queryset, per_page):
@@ -25,6 +25,7 @@ def index(request):
 	matches_page = paginate_list(request, matches, settings.MATCHES_PER_PAGE)
 	return render(request, "match/index.html", {
 		'page': matches_page,
+		'players': Player.objects.all(),
 	})
 
 

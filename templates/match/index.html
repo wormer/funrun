@@ -30,4 +30,25 @@
 	{% endfor %}
 </table>
 {% include "inc/paginator.html" %}
+<h2>Игроки</h2>
+<table class="players">
+	<tr>
+		<th>Игрок</th>
+		<th>Матчей сыграно</th>
+		<th>Раундов выиграно</th>
+		<th>Золото</th>
+		<th>Серебро</th>
+		<th>Бронза</th>
+	</tr>
+	{% for player in players %}
+		<tr>
+			<td>{{ player }}</td>
+			<td>{{ player.match_set.count }}</td>
+			<td>{{ player.round_set.count }}</td>
+			<td>{{ player.get_place1_number }}</td>
+			<td>{{ player.get_place2_number }}</td>
+			<td>{{ player.get_place3_number }}</td>
+		</tr>
+	{% endfor %}
+</table>
 {% endblock %}
