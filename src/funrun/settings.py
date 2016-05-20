@@ -39,7 +39,7 @@ WSGI_APPLICATION = 'funrun.wsgi.application'
 # Internationalization
 # https://docs.djangofunrun.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'America/New_York'
 

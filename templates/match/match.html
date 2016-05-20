@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url 'funrun.match.views.index' %}">На главную</a>
+<h1>{{ match }}</h1>
+{% if match.end_time %}
+	<table>
+		<tr>
+			<th>Начало</th>
+			<td>{{ match.start_time|date:"d E Y, H:i" }}</td>
+		</tr>
+		<tr>
+			<th>Конец</th>
+			<td>{{ match.end_time|date:"d E Y, H:i" }}</td>
+		</tr>
+	</table>
+	<h2>Статистика</h2>
+	<table>
+		<tr>
+			<th>Игрок</th>
+			<th>Победы</th>
+			<th>Место</th>
+		</tr>
+		{% for player in match.get_stats %}
+			<tr>
+				<td>{{ player.1 }}</td>
+				<td>{{ player.2 }}</td>
+				<td>
+					{% if player.3 != None %}
+						{{ player.3|default:'-' }}
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<h2>Раунды</h2>
+	<table>
+		<tr>
+			<th>Раунд</th>
+			<th>Время начала</th>
+			<th>Время окончания</th>
+			<th>Победитель</th>
+		</tr>
+		{% for round in match.round_set.all %}
+			<tr>
+				<td>{{ round.get_number }}</td>
+				<td>{{ round.start_time|date:"H:i:s" }}</td>
+				<td>{{ round.end_time|date:"H:i:s" }}</td>
+				<td>{{ round.winner }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% else %}
+	<form action="{% url 'funrun.match.views.match' match.id %}" method="POST">{% csrf_token %}
+		<button type="submit" name="finish" value="match" onclick="if (!confirm('Нажмите ОК, если матч окончательно завершён')) return false;">Завершить матч</button>
+		<h2>Игроки</h2>
+		{{ players_form.as_p }}
+		<button type="submit" name="update" value="players">Сохранить изменения</button>
+		{% if match.players.count > 1 %}
+			<h2>Статистика</h2>
+			<table>
+				<tr>
+					<th>Игрок</th>
+					<th>Победы</th>
+					<th>Место</th>
+				</tr>
+				{% for player in match.get_stats %}
+					<tr>
+						<td>{{ player.1 }}</td>
+						<td>{{ player.2 }}</td>
+						<td>
+							{% if player.3 != None %}
+								{{ player.3|default:'-' }}
+							{% else %}
+								<button type="submit" name="leave" value="{{ player.0 }}" onclick="if (!confirm('Вы уверены, что {{ player.1 }} закончил игру?')) return false;">Закончил</button>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+	</form>
+	{% if match.players.count > 1 %}
+		<form action="{% url 'funrun.match.views.round' match.id %}" method="POST">{% csrf_token %}
+			<h2>Раунды</h2>
+			<table>
+				<tr>
+					<th>Раунд</th>
+					<th>Время начала</th>
+					<th>Время окончания</th>
+					<th>Победитель</th>
+					<th>Исправить</th>
+				</tr>
+				<tr>
+					{% if match.round_set.count = 0 or match.round_set.all.0.winner %}
+						<td colspan="5">
+							<button type="submit" name="round" value="new">Новый раунд</button>
+						</td>
+					{% endif %}
+				</tr>
+				{% for round in match.round_set.all %}
+					<tr>
+						<td>{{ round.get_number }}</td>
+						<td>{{ round.start_time|date:"H:i:s" }}</td>
+						<td>{{ round.end_time|date:"H:i:s" }}</td>
+						<td>
+							{% if round.winner %}
+								{{ round.winner }}
+							{% else %}
+								{% for player in match.players.all %}
+									<button type="submit" name="winner" value="{{ player.id }}">{{ player }}</button>
+									<br />
+								{% endfor %}
+							{% endif %}
+						</td>
+						<td>
+							{% if forloop.counter == 1 %}
+								{% if round.winner %}
+									<button type="submit" name="round" value="cancel" onclick="if (!confirm('Точно нужно отменить победу {{ round.winner }} в раунде {{ round.get_number }}?')) return false;">Отменить</button>
+								{% else %}
+									<button type="submit" name="round" value="delete" onclick="if (!confirm('Действительно удалить раунд {{ round.get_number }}?')) return false;">Удалить</button>
+								{% endif %}
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</form>
+	{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,1 +1,14 @@
 * { margin: 0; padding: 0; }
+
+body { font-family: Arial; font-size: 14px; }
+
+table { border-collapse: collapse; margin-bottom: 15px; }
+table td,
+table th { padding: 5px 10px; border: 1px solid #ccc; }
+
+h1 { margin-bottom: 15px; }
+h2 { margin-bottom: 15px; margin-top: 15px; }
+
+select[multiple=multiple] { min-height: 100px; }
+
+.content { padding: 20px; }
