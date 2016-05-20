@@ -101,6 +101,11 @@ EMAIL_SUBJECT_PREFIX = '[funrun] '  # for mailing admins and managers
 DEFAULT_FROM_EMAIL = 'funrun@wormer.inetss.com'
 
 
+# Pagination
+
+MATCHES_PER_PAGE = 10
+
+
 # Local
 
 from .local_settings import *

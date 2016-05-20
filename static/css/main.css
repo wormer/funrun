@@ -9,6 +9,19 @@ table th { padding: 5px 10px; border: 1px solid #ccc; }
 h1 { margin-bottom: 15px; }
 h2 { margin-bottom: 15px; margin-top: 15px; }
 
+li { list-style: none; }
+
 select[multiple=multiple] { min-height: 100px; }
 
 .content { padding: 20px; }
+
+.paginator { margin: 15px 0; }
+.paginator a { padding: 2px 5px; color: #000; text-decoration: none; }
+.paginator a:hover { background: #f88; }
+.paginator span { padding: 2px 5px; color: #ccc; }
+.paginator .active { background: #f33; color: #fff; }
+.paginator .displayed { color: #888; background: #eee; margin-right: 10px; }
+
+li.place1 { font-weight: bold; }
+li.place2 {}
+li.place3 { color: #aaa; }

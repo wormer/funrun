@@ -1,12 +1,31 @@
 from django import forms
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
+from django.core.paginator import InvalidPage, EmptyPage, Paginator
 from django.utils import timezone
 
 from .models import Match
 
+
+def paginate_list(request, queryset, per_page):
+	try:
+		page = int(request.GET.get('page', 1))
+	except ValueError:
+		page = 1
+	paginator = Paginator(queryset, per_page)
+	try:
+		return paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		return paginator.page(paginator.num_pages)
+
+
 def index(request):
-	return render(request, "match/index.html")
+	matches = Match.objects.all()
+	matches_page = paginate_list(request, matches, settings.MATCHES_PER_PAGE)
+	return render(request, "match/index.html", {
+		'page': matches_page,
+	})
 
 
 def start_match(request):

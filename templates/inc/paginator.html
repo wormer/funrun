@@ -1,0 +1,31 @@
+{% if page.number %}
+	<div class="paginator">
+		<span class="displayed">
+			{% if page.paginator.num_pages > 1 %}
+				{{ page.start_index }}-{{ page.end_index }} из
+			{% endif %}
+			{{ page.paginator.count }}
+		</span>
+	{% if page.has_other_pages %}
+		{% if page.has_previous %}
+			<a href="?page={{ page.previous_page_number }}">&laquo; предыдущая</a>
+		{% else %}
+			<span>&laquo; предыдущая</span>
+		{% endif %}
+		{% for x in page.paginator.page_range %}
+			{% if x > page.number|add:-5 and x < page.number|add:5 %}
+				{% if page.number == x %}
+					<span class="active">{{ x }}</span>
+				{% else %}
+					<a href="?page={{ x }}">{{ x }}</a>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+		{% if page.has_next %}
+			<a href="?page={{ page.next_page_number }}">следующая &raquo;</a>
+		{% else %}
+			<span>следующая &raquo;</span>
+		{% endif %}
+	{% endif %}
+	</div>
+{% endif %}

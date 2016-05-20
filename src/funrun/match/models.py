@@ -66,7 +66,7 @@ class Leave(models.Model):
 	class Meta:
 		verbose_name = 'Выход'
 		verbose_name_plural = 'Выходы'
-		ordering = '-match_id', '-time'
+		ordering = 'place',
 
 	def __str__(self):
 		if self.place > 0:

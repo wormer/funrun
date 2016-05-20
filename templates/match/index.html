@@ -3,4 +3,31 @@
 {% block content %}
 <h1>FUN RUN</h1>
 <a href="{% url 'funrun.match.views.start_match' %}">Начать новый матч</a>
+<h2>Матчи</h2>
+{% include "inc/paginator.html" %}
+<table class="matches">
+	<tr>
+		<th>Матч</th>
+		<th>Дата</th>
+		<th>Раунды</th>
+		<th>Результат</th>
+	</tr>
+	{% for match in page.object_list %}
+		<tr>
+			<td><a href="{{ match.get_absolute_url }}">{{ match }}</a></td>
+			<td>{{ match.end_time|date:"d E Y"|default:"Не завершён" }}</td>
+			<td>{{ match.round_set.count }}</td>
+			<td>
+				<ul>
+					{% for leave in match.leave_set.all %}
+						{% if leave.place > 0 %}
+							<li class="place{{ leave.place }}">{{ leave.place }}: {{ leave.player }}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</td>
+		</tr>
+	{% endfor %}
+</table>
+{% include "inc/paginator.html" %}
 {% endblock %}
