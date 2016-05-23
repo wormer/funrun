@@ -107,9 +107,11 @@
 							{% if round.winner %}
 								{{ round.winner }}
 							{% else %}
-								{% for player in match.players.all %}
-									<button type="submit" name="winner" value="{{ player.id }}">{{ player }}</button>
-									<br />
+								{% for player in match.get_stats %}
+									{% if player.3 = None %}
+										<button type="submit" name="winner" value="{{ player.0 }}">{{ player.1 }}</button>
+										<br />
+									{% endif %}
 								{% endfor %}
 							{% endif %}
 						</td>

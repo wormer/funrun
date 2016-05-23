@@ -48,6 +48,7 @@ class Match(models.Model):
 		cursor.execute(sql, [self.id])
 		return cursor.fetchall()
 
+
 class Round(models.Model):
 	match = models.ForeignKey(Match, verbose_name='Матч')
 	start_time = models.DateTimeField('Время начала', auto_now_add=True)

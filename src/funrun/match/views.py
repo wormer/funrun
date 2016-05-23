@@ -98,7 +98,8 @@ def round(request, match_id):
 		elif round == 'delete':
 			current_round.delete()
 		if winner:
-			current_round.winner_id = winner
-			current_round.end_time = timezone.now()
-			current_round.save()
+			if not match.leave_set.filter(player_id=winner).exists():
+				current_round.winner_id = winner
+				current_round.end_time = timezone.now()
+				current_round.save()
 	return redirect(match)
