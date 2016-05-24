@@ -9,6 +9,7 @@
 	<tr>
 		<th>Матч</th>
 		<th>Дата</th>
+		<th>Игроки</th>
 		<th>Раунды</th>
 		<th>Результат</th>
 	</tr>
@@ -16,6 +17,7 @@
 		<tr>
 			<td><a href="{{ match.get_absolute_url }}">{{ match }}</a></td>
 			<td>{{ match.end_time|date:"d E Y"|default:"Не завершён" }}</td>
+			<td>{{ match.players.count }}</td>
 			<td>{{ match.round_set.count }}</td>
 			<td>
 				<ul>
