@@ -13,6 +13,10 @@
 			<th>Конец</th>
 			<td>{{ match.end_time|date:"d E Y, H:i" }}</td>
 		</tr>
+		<tr>
+			<th>Время</th>
+			<td>{{ match.get_duration }}</td>
+		</tr>
 	</table>
 	<h2>Статистика</h2>
 	<table>

@@ -11,6 +11,7 @@
 		<th>Дата</th>
 		<th>Игроки</th>
 		<th>Раунды</th>
+		<th>Время</th>
 		<th>Результат</th>
 	</tr>
 	{% for match in page.object_list %}
@@ -19,6 +20,7 @@
 			<td>{{ match.end_time|date:"d E Y"|default:"Не завершён" }}</td>
 			<td>{{ match.players.count }}</td>
 			<td>{{ match.round_set.count }}</td>
+			<td>{{ match.get_duration }}</td>
 			<td>
 				<ul>
 					{% for leave in match.leave_set.all %}

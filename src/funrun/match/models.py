@@ -48,6 +48,12 @@ class Match(models.Model):
 		cursor.execute(sql, [self.id])
 		return cursor.fetchall()
 
+	def get_duration(self):
+		if not self.end_time:
+			return ''
+		duration = (self.end_time - self.start_time).seconds
+		return '%d min' % (duration // 60)
+
 
 class Round(models.Model):
 	match = models.ForeignKey(Match, verbose_name='Матч')
