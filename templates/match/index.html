@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Статистика / {{ block.super}}{% endblock %}
+
 {% block content %}
 <h1>FUN RUN</h1>
 <a href="{% url 'funrun.match.views.start_match' %}">Начать новый матч</a>

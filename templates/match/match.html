@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Матч {{ match.id }} / {{ block.super}}{% endblock %}
+
 {% block content %}
 <a href="{% url 'funrun.match.views.index' %}">На главную</a>
 <h1>{{ match }}</h1>
