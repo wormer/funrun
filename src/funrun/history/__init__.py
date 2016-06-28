@@ -1,0 +1,1 @@
+default_app_config = 'funrun.history.apps.HistoryConfig'
