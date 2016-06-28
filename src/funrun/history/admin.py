@@ -23,9 +23,14 @@ class SheetAdmin(admin.ModelAdmin):
 		return date(obj.to_date)
 
 
+class ParticipationInline(admin.TabularInline):
+	model = Participation
+
+
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
 	list_display = 'id', 'date',
+	inlines = ParticipationInline,
 
 
 @admin.register(Player)

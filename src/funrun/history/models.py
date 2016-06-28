@@ -8,6 +8,9 @@ class Match(models.Model):
 class Player(models.Model):
 	name = models.CharField(max_length=254, unique=True)
 
+	def __str__(self):
+		return self.name
+
 
 class Participation(models.Model):
 	match = models.ForeignKey(Match)
