@@ -2,6 +2,9 @@ from django.core.urlresolvers import reverse
 from django.db import models, connection
 
 
+from funrun.history.models import Match as HMatch, Participation, Place
+
+
 class Player(models.Model):
 	name = models.CharField('Имя', max_length=255)
 
@@ -13,14 +16,20 @@ class Player(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_match_count(self):
+		return self.match_set.count() + HMatch.objects.filter(participation__player__name=self.name).count()
+
+	def get_round_count(self):
+		return self.round_set.count() + Participation.objects.filter(player__name=self.name).aggregate(victories=models.Sum('victories'))['victories']
+
 	def get_place1_number(self):
-		return self.leave_set.filter(place=1).count()
+		return self.leave_set.filter(place=1).count() + Place.objects.filter(participation__player__name=self.name, number=1).count()
 
 	def get_place2_number(self):
-		return self.leave_set.filter(place=2).count()
+		return self.leave_set.filter(place=2).count() + Place.objects.filter(participation__player__name=self.name, number=2).count()
 
 	def get_place3_number(self):
-		return self.leave_set.filter(place=3).count()
+		return self.leave_set.filter(place=3).count() + Place.objects.filter(participation__player__name=self.name, number=3).count()
 
 
 class Match(models.Model):
