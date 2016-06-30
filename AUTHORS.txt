@@ -1,0 +1,4 @@
+funrun championship management was written by these fine people:
+
+Wormer
+Stepan Bakshayev <step2back+unnu@gmail.com>
