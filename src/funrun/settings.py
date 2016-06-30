@@ -18,6 +18,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 
 	'funrun.match',
+	'funrun.history',
 )
 
 MIDDLEWARE_CLASSES = (
