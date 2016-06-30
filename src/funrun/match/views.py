@@ -1,4 +1,5 @@
 from django import forms
+from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
@@ -30,8 +31,8 @@ def index(request):
 
 
 def start_match(request):
-	match = Match.objects.create()
-	return redirect(match)
+	match_id = Match.objects.create().id
+	return redirect('match:match', match_id=match_id)
 
 
 class PlayersForm(forms.ModelForm):
@@ -75,7 +76,7 @@ def match(request, match_id):
 				else:
 					match.end_time = timezone.now()
 					match.save()
-			return redirect(match)
+			return redirect('match:match', match_id=match.id)
 	return render(request, "match/match.html", {
 		'match': match,
 		'players_form': players_form,
@@ -102,4 +103,4 @@ def round(request, match_id):
 				current_round.winner_id = winner
 				current_round.end_time = timezone.now()
 				current_round.save()
-	return redirect(match)
+	return redirect('match:match', match_id=match.id)
