@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'^([^/]+\.[^/]+)$', django.views.static.serve, {'document_root': settings.STATICFILES_ROOT}),
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'', include('funrun.match.urls')),
+	url(r'^history/', include('funrun.history.urls')),
 ]
 
 if settings.DEBUG and settings.MEDIA_URL.startswith('/'):
