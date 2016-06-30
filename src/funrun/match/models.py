@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.db import models, connection
+from django.db.models.functions import Coalesce
 
 
 from funrun.history.models import Match as HMatch, Participation, Place
@@ -20,7 +21,7 @@ class Player(models.Model):
 		return self.match_set.count() + HMatch.objects.filter(participation__player__name=self.name).count()
 
 	def get_round_count(self):
-		return self.round_set.count() + Participation.objects.filter(player__name=self.name).aggregate(victories=models.Sum('victories'))['victories']
+		return self.round_set.count() + Participation.objects.filter(player__name=self.name).aggregate(victories=Coalesce(models.Sum('victories'), models.expressions.Value(0)))['victories']
 
 	def get_place1_number(self):
 		return self.leave_set.filter(place=1).count() + Place.objects.filter(participation__player__name=self.name, number=1).count()
