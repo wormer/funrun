@@ -27,13 +27,15 @@ class Command(BaseCommand):
 				sheet = Sheet()
 				sheet.save()
 				previous_date = date.min
+				matches = 0
 				for data in yaml.load(source):
 					if 'sheet' in data:
 						sheet.rows = data['sheet']['rows']
 						sheet.columns = data['sheet']['columns']
 						sheet.save()
 					elif 'players' in data:
-						continue
+						for player_name in data['players']:
+							Player.objects.get_or_create(name=player_name)
 					elif {'date', 'victories', 'places'} <= data.keys():
 						assert previous_date <= data['date'], 'Previous date %r is greater then present %r' % (previous_date, data['date'])
 						previous_date = data['date']
@@ -41,10 +43,11 @@ class Command(BaseCommand):
 							date=timezone.make_aware(datetime(*data['date'].timetuple()[:3], hour=12), current_timezone)
 						)
 						sheet.matches.add(match)
+						matches += 1
 						max_score = max(data['victories'].values())
 						raisingrates = data.get('raised', {'by': None, 'from': -1})
 						for player_name, count in data['victories'].items():
-							player, _ = Player.objects.get_or_create(name=player_name)
+							player = Player.objects.get(name=player_name)
 							participation = Participation.objects.create(match=match, player=player, victories=count)
 							if player_name in data['places']:
 								assert max_score == count, 'Player %r is medalist, but his victories number %r is less then max %r in data %r' % (player_name, count, max_score, data)
@@ -58,3 +61,4 @@ class Command(BaseCommand):
 					else:
 						raise ValueError('data "%r" is not supported.'%data)
 
+				assert matches <= sheet.rows * sheet.columns, 'Matrix of sheet %dx%d can not fit %d matches' % (sheet.columns, sheet.rows, matches)

@@ -3,7 +3,7 @@
 {% block title %}Матч {{ match.id }} / {{ block.super}}{% endblock %}
 
 {% block content %}
-<a href="{% url 'funrun.match.views.index' %}">На главную</a>
+<a href="{% url 'match:root' %}">На главную</a>
 <h1>{{ match }}</h1>
 {% if match.end_time %}
 	<table>
@@ -57,7 +57,7 @@
 		{% endfor %}
 	</table>
 {% else %}
-	<form action="{% url 'funrun.match.views.match' match.id %}" method="POST">{% csrf_token %}
+	<form action="{% url 'match:match' match.id %}" method="POST">{% csrf_token %}
 		<button type="submit" name="finish" value="match" onclick="if (!confirm('Нажмите ОК, если матч окончательно завершён')) return false;">Завершить матч</button>
 		<h2>Игроки</h2>
 		{{ players_form.as_p }}
@@ -87,7 +87,7 @@
 		{% endif %}
 	</form>
 	{% if match.players.count > 1 %}
-		<form action="{% url 'funrun.match.views.round' match.id %}" method="POST">{% csrf_token %}
+		<form action="{% url 'match:round' match.id %}" method="POST">{% csrf_token %}
 			<h2>Раунды</h2>
 			<table>
 				<tr>

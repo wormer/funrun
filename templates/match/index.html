@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>FUN RUN</h1>
-<a href="{% url 'funrun.match.views.start_match' %}">Начать новый матч</a>
+<a href="{% url 'match:start_match' %}">Начать новый матч</a>
 <h2>Матчи</h2>
 {% include "inc/paginator.html" %}
 <table class="matches">
@@ -18,7 +18,7 @@
 	</tr>
 	{% for match in page.object_list %}
 		<tr>
-			<td><a href="{{ match.get_absolute_url }}">{{ match }}</a></td>
+			<td><a href="{% url 'match:match' match_id=match.id %}">{{ match }}</a></td>
 			<td>{{ match.end_time|date:"d E Y"|default:"Не завершён" }}</td>
 			<td>{{ match.players.count }}</td>
 			<td>{{ match.round_set.count }}</td>
@@ -57,4 +57,7 @@
 		</tr>
 	{% endfor %}
 </table>
+<p>
+	<a href="{% url 'history:sheets' %}">Заглянуть в историю</a>
+</p>
 {% endblock %}

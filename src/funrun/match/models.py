@@ -46,9 +46,6 @@ class Match(models.Model):
 	def __str__(self):
 		return 'Матч %d' % self.pk
 
-	def get_absolute_url(self):
-		return reverse('funrun.match.views.match', args=[self.pk])
-
 	def get_stats(self, exclude_winners=False):
 		sql = 'SELECT p.id, p.name, (SELECT count(*) FROM match_round r WHERE r.match_id=m.match_id AND r.winner_id=p.id) AS wins, l.place FROM match_player p JOIN match_match_players m ON m.player_id=p.id AND m.match_id=%s LEFT JOIN match_leave l ON l.match_id=m.match_id AND l.player_id=p.id'
 		if exclude_winners:

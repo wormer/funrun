@@ -17,6 +17,8 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.staticfiles',
 
+	'aldjemy',
+
 	'funrun.match',
 	'funrun.history',
 )

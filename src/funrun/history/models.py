@@ -35,4 +35,4 @@ class Sheet(models.Model):
 	photo = models.ImageField(upload_to='history/facts/', null=True, blank=True)
 	rows = models.PositiveSmallIntegerField(null=True, blank=True)
 	columns = models.PositiveSmallIntegerField(null=True, blank=True)
-	matches = models.ManyToManyField(Match)
+	matches = models.ManyToManyField(Match, blank=True)

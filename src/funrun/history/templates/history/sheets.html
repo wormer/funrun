@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}История / {{ block.super}}{% endblock %}
+
+{% block content %}
+<a href="{% url 'match:root' %}">На главную</a>
+<h1>История</h1>
+{% if not processed.exists and not raw.exists %}
+<p>
+	Соревнования идут без оглядки на историю.
+</p>
+{% endif %}
+{% if processed.exists %}
+<h2>Обработанные листы</h2>
+<p>
+	<ul>
+		{% for sheet in processed %}
+		<li><a href="{% url 'history:sheet' sheet_id=sheet.id %}">{{ sheet.id }}</a> с {{ sheet.from_date|date }} по {{ sheet.to_date|date }}</li>
+		{% endfor %}
+	</ul>
+</p>
+{% endif %}
+{% if raw.exists %}
+<h2>Необработанные листы</h2>
+<p>
+	<ul>
+		{% for sheet in raw %}
+		<li><a href="{% url 'history:sheet' sheet_id=sheet.id %}">{{ sheet.id }}</a></li>
+		{% endfor %}
+	</ul>
+</p>
+{% endif %}
+{% endblock %}
