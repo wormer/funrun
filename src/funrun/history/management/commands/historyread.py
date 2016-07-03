@@ -27,6 +27,7 @@ class Command(BaseCommand):
 				sheet = Sheet()
 				sheet.save()
 				previous_date = date.min
+				matches = 0
 				for data in yaml.load(source):
 					if 'sheet' in data:
 						sheet.rows = data['sheet']['rows']
@@ -42,6 +43,7 @@ class Command(BaseCommand):
 							date=timezone.make_aware(datetime(*data['date'].timetuple()[:3], hour=12), current_timezone)
 						)
 						sheet.matches.add(match)
+						matches += 1
 						max_score = max(data['victories'].values())
 						raisingrates = data.get('raised', {'by': None, 'from': -1})
 						for player_name, count in data['victories'].items():
@@ -59,3 +61,4 @@ class Command(BaseCommand):
 					else:
 						raise ValueError('data "%r" is not supported.'%data)
 
+				assert matches <= sheet.rows * sheet.columns, 'Matrix of sheet %dx%d can not fit %d matches' % (sheet.columns, sheet.rows, matches)
