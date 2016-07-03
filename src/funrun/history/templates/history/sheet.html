@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load history_utils %}
+
+{% block title %}История / {{ block.super}}{% endblock %}
+
+{% block content %}
+<a href="{% url 'history:sheets' %}">К списку листов</a>
+<h1>Лист {{ sheet.id }}</h1>
+<style>
+	#background-switch:checked ~ table {
+		background-image: url({{ sheet.photo.url }});
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+</style>
+<input id="background-switch" type="checkbox">
+<label for="background-switch">Подложить под таблицу оригинал.</label>
+<table style="
+	width: 100%;
+	">
+	<tbody>
+		{% for headers, data in rows %}
+		<tr>
+			{% for header in headers %}
+			<th style="width: {{ column_width }}%;">{{ header }}</th>
+			{% endfor %}
+		</tr>
+		{% for columns in data %}
+		<tr>
+			{% for cell in columns %}
+			<td style="width: {{ column_width }}%;">{{ cell }}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
