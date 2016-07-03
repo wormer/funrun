@@ -33,7 +33,8 @@ class Command(BaseCommand):
 						sheet.columns = data['sheet']['columns']
 						sheet.save()
 					elif 'players' in data:
-						continue
+						for player_name in data['players']:
+							Player.objects.get_or_create(name=player_name)
 					elif {'date', 'victories', 'places'} <= data.keys():
 						assert previous_date <= data['date'], 'Previous date %r is greater then present %r' % (previous_date, data['date'])
 						previous_date = data['date']
@@ -44,7 +45,7 @@ class Command(BaseCommand):
 						max_score = max(data['victories'].values())
 						raisingrates = data.get('raised', {'by': None, 'from': -1})
 						for player_name, count in data['victories'].items():
-							player, _ = Player.objects.get_or_create(name=player_name)
+							player = Player.objects.get(name=player_name)
 							participation = Participation.objects.create(match=match, player=player, victories=count)
 							if player_name in data['places']:
 								assert max_score == count, 'Player %r is medalist, but his victories number %r is less then max %r in data %r' % (player_name, count, max_score, data)

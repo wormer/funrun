@@ -1,7 +1,7 @@
 from django.db import models
 from django.shortcuts import render, get_object_or_404
 
-from .models import Sheet
+from .models import Sheet, Player
 
 def sheets(request):
 	processed = (Sheet.objects
@@ -20,5 +20,24 @@ def sheets(request):
 
 
 def sheet(request, sheet_id):
+	from random import choice
+	from django.utils.safestring import mark_safe
 	sheet = get_object_or_404(Sheet, id=sheet_id)
-	return render(request, 'history/sheet.html', context={'sheet': sheet})
+	players = list(Player.objects.order_by('id'))
+
+	header = [mark_safe('&nbsp;')] + list(range(sheet.columns))
+
+	data = []
+	for player in players:
+		victories = [player.name] + [choice('-012345') for _ in range(sheet.columns)]
+		data.append(victories)
+
+	rows = [(header, data)] * sheet.rows
+
+	return render(request, 'history/sheet.html', context={
+		'sheet': sheet,
+		'rows': rows,
+		'column_width': str(100/(sheet.columns+1)),
+		'width': sheet.photo.width,
+		'height': sheet.photo.height,
+	})
