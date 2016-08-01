@@ -1,0 +1,29 @@
+<h2>Статистика за {% if current_month %}{{ current_month|date:"F Y" }}{% else %}{% now "F Y" %}{% endif %}</h2>
+<div class="paginator">
+	{% if previous_month %}
+		<a href="{% url "match:month_stats" %}?month={{ previous_month|date:"Y-m" }}">&laquo; {{ previous_month|date:"F Y" }}</a>
+	{% endif %}
+	{% if next_month %}
+		<a href="{% url "match:month_stats" %}?month={{ next_month|date:"Y-m" }}">{{ next_month|date:"F Y" }} &raquo;</a>
+	{% endif %}
+</div>
+<table class="players">
+	<tr>
+		<th>Игрок</th>
+		<th>Матчей сыграно</th>
+		<th>Раундов выиграно</th>
+		<th>Золото</th>
+		<th>Серебро</th>
+		<th>Бронза</th>
+	</tr>
+	{% for row in month_stats %}
+		<tr>
+			<td>{{ row.player }}</td>
+			<td>{{ row.match_count }}</td>
+			<td>{{ row.round_count }}</td>
+			<td>{{ row.place1_number }}</td>
+			<td>{{ row.place2_number }}</td>
+			<td>{{ row.place3_number }}</td>
+		</tr>
+	{% endfor %}
+</table>

@@ -1,6 +1,7 @@
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from django import forms
-from django.core.urlresolvers import reverse
-from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.core.paginator import InvalidPage, EmptyPage, Paginator
@@ -24,9 +25,11 @@ def paginate_list(request, queryset, per_page):
 def index(request):
 	matches = Match.objects.all()
 	matches_page = paginate_list(request, matches, settings.MATCHES_PER_PAGE)
+	previous_month = datetime.now() - relativedelta(months=1)
 	return render(request, "match/index.html", {
 		'page': matches_page,
-		'players': Player.objects.all(),
+		'month_stats': get_month_stats(),
+		'previous_month': previous_month,
 	})
 
 
@@ -104,3 +107,34 @@ def round(request, match_id):
 				current_round.end_time = timezone.now()
 				current_round.save()
 	return redirect('match:match', match_id=match.id)
+
+
+def get_month_stats(month=None):
+	if not month:
+		month = datetime.now()
+	stats = []
+	for player in Player.objects.all():
+		stats.append({
+			'player': player,
+			'match_count': player.match_set.filter(end_time__year=month.year, end_time__month=month.month).count(),
+			'round_count': player.round_set.filter(end_time__year=month.year, end_time__month=month.month).count(),
+			'place1_number': player.leave_set.filter(place=1, match__end_time__year=month.year, match__end_time__month=month.month).count(),
+			'place2_number': player.leave_set.filter(place=2, match__end_time__year=month.year, match__end_time__month=month.month).count(),
+			'place3_number': player.leave_set.filter(place=3, match__end_time__year=month.year, match__end_time__month=month.month).count(),
+		})
+	return stats
+
+
+def month_stats(request):
+	month_string = request.GET.get('month')
+	month = datetime.now()
+	if month_string:
+		month = datetime.strptime(month_string, '%Y-%m')
+	previous_month = month - relativedelta(months=1)
+	next_month = month + relativedelta(months=1)
+	return render(request, "match/month_stats.html", {
+		'current_month': month,
+		'previous_month': previous_month,
+		'next_month': next_month,
+		'month_stats': get_month_stats(month),
+	})

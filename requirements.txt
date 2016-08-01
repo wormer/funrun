@@ -8,3 +8,4 @@ pytz
 Pillow==3.2.0
 aldjemy==0.6.0
 SQLAlchemy==1.0.13
+python-dateutil==2.5.3

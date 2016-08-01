@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика за {{ current_month }} / {{ block.super}}{% endblock %}
+
+{% block content %}
+<a href="{% url 'match:root' %}">На главную</a>
+{% include "match/inc/month_stats.html" %}
+{% endblock %}
