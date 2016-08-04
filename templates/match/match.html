@@ -98,7 +98,7 @@
 					<th>Исправить</th>
 				</tr>
 				<tr>
-					{% if match.round_set.count = 0 or match.round_set.all.0.winner %}
+					{% if match.round_set.count == 0 or match.round_set.all.0.winner %}
 						<td colspan="5">
 							<button type="submit" name="round" value="new">Новый раунд</button>
 						</td>
@@ -114,7 +114,7 @@
 								{{ round.winner }}
 							{% else %}
 								{% for player in match.get_stats %}
-									{% if player.3 = None %}
+									{% if player.3 == None %}
 										<button type="submit" name="winner" value="{{ player.0 }}">{{ player.1 }}</button>
 										<br />
 									{% endif %}
