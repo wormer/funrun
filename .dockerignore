@@ -1,0 +1,9 @@
+*
+!docker
+!src
+src/conf/local.py
+!static
+!templates
+!requirements.txt
+
+**/__pycache__

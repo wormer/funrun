@@ -1,0 +1,13 @@
+Django==1.10
+psycopg2
+raven
+environs
+django-environ
+PyYAML
+ruamel.yaml
+ipython
+pytz
+Pillow
+aldjemy
+SQLAlchemy
+python-dateutil
